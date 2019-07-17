@@ -1,0 +1,514 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        下钻图表
+    </title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script src="highcharts.js"></script>
+    <script src="highcharts-more.js"></script>
+    <script src="drilldown.js"></script>
+
+    <style>
+        .chart {
+            width: 100%;
+            height: 400px;
+            border: 2px solid red;
+            margin: 50px 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="chart" id="chart1"></div>
+    <div class="chart" id="chart2"></div>
+    <script type="text/javascript">
+        const datayear = {
+            number: [{ name: "2013年", value: 209.02 }, { name: "2014年", value: 400.87 }, { name: "2015年", value: 521.75 }, { name: "2016年", value: 626.16 }, { name: "2017年", value: 680.52 }, { name: "2018年", value: 486.21 }, { name: "2019年", value: 0 }],
+            percent: [{ name: "2013年", value: 54.1 }, { name: "2014年", value: 91.8 }, { name: "2015年", value: 30.2 }, { name: "2016年", value: 20 }, { name: "2017年", value: 8.3 }, { name: "2018年", value: 1.2 }, { name: "2019年", value: -11.4 }]
+        }
+        const monthdata = {
+            number: [
+                { name: '2013年', data: [['2月', 7.5], ['3月', 30.21], ['4月', 47.35], ['5月', 50.67], ['6月', 82.08], ['7月', 97.53], ['8月', 123.59], ['9月', 151.02], ['10月', 175.58], ['11月', 197.1], ['12月', 209.02]] },
+                { name: '2014年', data: [['2月', 10.04], ['3月', 40.01], ['4月', 68.83], ['5月', 116.29], ['6月', 165.19], ['7月', 195.09], ['8月', 234.62], ['9月', 278.72], ['10月', 317.14], ['11月', 348.31], ['12月', 400.87]] },
+                { name: '2015年', data: [['2月', 14.45], ['3月', 59.81], ['4月', 96.84], ['5月', 166.45], ['6月', 225.96], ['7月', 258.51], ['8月', 308.95], ['9月', 366.66], ['10月', 400.91], ['11月', 454.53], ['12月', 521.75]] },
+                { name: '2016年', data: [['2月', 18.45], ['3月', 73.28], ['4月', 114.29], ['5月', 195.44], ['6月', 254.95], ['7月', 302.04], ['8月', 421.61], ['9月', 479.64], ['10月', 534.11], ['11月', 7.5], ['12月', 626.16]] },
+                { name: '2017年', data: [['2月', 7.5], ['3月', 30.21], ['4月', 47.35], ['5月', 7.5], ['6月', 7.5], ['7月', 7.5], ['8月', 7.5], ['9月', 7.5], ['10月', 7.5], ['11月', 7.5], ['12月', 7.5]] },
+                { name: '2018年', data: [['2月', 7.5], ['3月', 30.21], ['4月', 47.35], ['5月', 7.5], ['6月', 7.5], ['7月', 7.5], ['8月', 7.5], ['9月', 7.5], ['10月', 7.5], ['11月', 7.5], ['12月', 7.5]] },
+                { name: '2019年', data: [['2月', 7.5], ['3月', 30.21], ['4月', 47.35], ['5月', 7.5], ['6月', 7.5], ['7月', 7.5], ['8月', 7.5], ['9月', 7.5], ['10月', 7.5], ['11月', 7.5], ['12月', 7.5]] },
+            ],
+            percent: [
+                { name: '2013年', data: [['2月', 7.5], ['3月', 30.21], ['4月', 47.35], ['5月', 7.5], ['6月', 7.5], ['7月', 7.5], ['8月', 7.5], ['9月', 7.5], ['10月', 7.5], ['11月', 7.5], ['12月', 7.5]] },
+                { name: '2014年', data: [['2月', 10.04], ['3月', 40.01], ['4月', 68.83], ['5月', 116.29], ['6月', 165.19], ['7月', 195.09], ['8月', 234.62], ['9月', 278.72], ['10月', 317.14], ['11月', 348.31], ['12月', 400.87]] },
+                { name: '2015年', data: [[['2月', 7.5], ['3月', 30.21], ['4月', 47.35], ['5月', 7.5], ['6月', 7.5], ['7月', 7.5], ['8月', 7.5], ['9月', 7.5], ['10月', 7.5], ['11月', 7.5], ['12月', 7.5]]] },
+                { name: '2016年', data: [['2月', 18.45], ['3月', 73.28], ['4月', 114.29], ['5月', 195.44], ['6月', 254.95], ['7月', 302.04], ['8月', 421.61], ['9月', 479.64], ['10月', 534.11], ['11月', 7.5], ['12月', 626.16]] },
+                { name: '2017年', data: [['2月', 7.5], ['3月', 30.21], ['4月', 47.35], ['5月', 7.5], ['6月', 7.5], ['7月', 7.5], ['8月', 7.5], ['9月', 7.5], ['10月', 7.5], ['11月', 7.5], ['12月', 7.5]] },
+                { name: '2018年', data: [['2月', 7.5], ['3月', 30.21], ['4月', 47.35], ['5月', 7.5], ['6月', 7.5], ['7月', 7.5], ['8月', 7.5], ['9月', 7.5], ['10月', 7.5], ['11月', 7.5], ['12月', 7.5]] },
+                { name: '2019年', data: [['2月', 7.5], ['3月', 30.21], ['4月', 47.35], ['5月', 7.5], ['6月', 7.5], ['7月', 7.5], ['8月', 7.5], ['9月', 7.5], ['10月', 7.5], ['11月', 7.5], ['12月', 7.5]] },
+            ]
+        }
+        //柱形堆叠图数据
+        const data_dui = {
+            name: '地区生产总值',
+            unit: '亿元',
+            yeardata: {
+                number: [
+                    {
+                        name: '第一产业',
+                        data: [
+                            { "name": "2015年", y: 1234, drilldown: true },
+                            { "name": "2016年", y: 2358, drilldown: true },
+                            { "name": "2017年", y: 3589, drilldown: true },
+                            { "name": "2018年", y: 4685, drilldown: true },
+                        ]
+                    },
+                    {
+                        name: '第二产业',
+                        data: [
+                            { "name": "2015年", y: 486, drilldown: true },
+                            { "name": "2016年", y: 1258, drilldown: true },
+                            { "name": "2017年", y: 845, drilldown: true },
+                            { "name": "2018年", y: 245, drilldown: true },
+                        ]
+                    },
+                    {
+                        name: '第三产业',
+                        data: [
+                            { "name": "2015年", y: 156, drilldown: true },
+                            { "name": "2016年", y: 258, drilldown: true },
+                            { "name": "2017年", y: 354, drilldown: true },
+                            { "name": "2018年", y: 564, drilldown: true },
+                        ]
+                    },
+                ],
+                percent: [
+                    {
+                        name: '同比',
+                        data: [
+                            { "name": "2015年", y: 6.9, drilldown: true },
+                            { "name": "2016年", y: 45, drilldown: true },
+                            { "name": "2017年", y: 35, drilldown: true },
+                            { "name": "2018年", y: 70, drilldown: true },
+                        ]
+                    }
+                ]
+            },
+            monthdata: {
+                number: [
+                    [
+                        {
+                            id: "2015年",
+                            data: { name: '第一产业', data: [['3月', 123], ['6月', 456], ['9月', 678], ['12月', 789]] }
+                        },
+                        {
+                            id: "2016年",
+                            data: {
+                                name: '第一产业',
+                                data: [['3月', 45], ['6月', 86], ['9月', 67], ['12月', 400]]
+                            }
+                        },
+                        { id: "2017年", data: { name: '第一产业', data: [['3月', 253], ['6月', 123], ['9月', 456], ['12月', 321]] } },
+                        { id: "2018年", data: { name: '第一产业', data: [['3月', 564], ['6月', 231], ['9月', 253], ['12月', 50]] } },
+                    ],
+                    [
+                        { id: "2015年", data: { name: '第二产业', data: [['3月', 78], ['6月', 89], ['9月', 65], ['12月', 45]] } },
+                        { id: "2016年", data: { name: '第二产业', data: [['3月', 450], ['6月', 286], ['9月', 607], ['12月', 400]] } },
+                        { id: "2017年", data: { name: '第二产业', data: [['3月', 25], ['6月', 123], ['9月', 46], ['12月', 31]] } },
+                        { id: "2018年", data: { name: '第二产业', data: [['3月', 54], ['6月', 131], ['9月', 153], ['12月', 150]] } },
+                    ],
+                    [
+                        { id: "2015年", data: { name: '第三产业', data: [['3月', 100], ['6月', 150], ['9月', 130], ['12月', 145]] } },
+                        { id: "2016年", data: { name: '第三产业', data: [['3月', 50], ['6月', 80], ['9月', 110], ['12月', 150]] } },
+                        { id: "2017年", data: { name: '第三产业', data: [['3月', 30], ['6月', 50], ['9月', 60], ['12月', 70]] } },
+                        { id: "2018年", data: { name: '第三产业', data: [['3月', 50], ['6月', 231], ['9月', 153], ['12月', 50]] } },
+                    ]
+                ],
+                percent: [
+                    [
+                        { id: "2015年", data: { name: '同比', data: [['3月', 12], ['6月', 45], ['9月', 30], ['12月', 20]] } },
+                        { id: "2016年", data: { name: '同比', data: [['3月', 2], ['6月', 10], ['9月', 20], ['12月', 30]] } },
+                        { id: "2017年", data: { name: '同比', data: [['3月', 20], ['6月', 25], ['9月', 35], ['12月', 40]] } },
+                        { id: "2018年", data: { name: '同比', data: [['3月', 52], ['6月', 40], ['9月', 32], ['12月', 40]] } },
+                    ],
+                ]
+            }
+        }
+        const color=['#01b868', "#4f9cee", "#3abfec", '#ec7e03'];
+        /*处理y轴数据*/
+        function handleYeardata(data) {
+            var newdata = { number: null, percent: null };
+            newdata.number = data.number.map(function (item) {
+                if (Math.abs(item.value)) {
+                    return { name: item.name, y: item.value, drilldown: item.name };
+                } else {
+                    return { name: item.name, y: item.value }; //处理数据如果是0就不下钻
+                }
+
+            })
+            newdata.percent = data.percent.map(function (item) {
+                if (Math.abs(item.value)) {
+                    return { name: item.name, y: item.value, drilldown: item.name + 'line' };
+                } else {
+                    return { name: item.name, y: item.value };
+                }
+
+            })
+            return newdata;
+        }
+        /*处理x轴数据*/
+        function handleMonthdata(data) {
+            var data1 = data.number.map(function (item) {
+                return { id: item.name, name: '规模', type: 'column', data: item.data };
+            });
+            var data2 = data.percent.map(function (item) {
+                return { id: item.name + 'line', name: '同比', type: 'spline', data: item.data, yAxis: 1 };
+            });
+            return data1.concat(data2);
+        }
+        /*一条线和一条柱的下钻图*/
+        function yeraChart(wrap, datayear, monthdata) {
+            var chart = Highcharts.chart(wrap, {
+                chart: {
+                    zoomType: 'xy',
+                    backgroundColor: 'none',
+                    margin: [30, 15, 35, 135],
+                },
+                title: {
+                    text: ''
+                },
+                lang: {
+                    drillUpText: '\u25c1 返回年度'
+                },
+                colors: color,
+                subtitle: {
+                    text: ''
+                },
+                exporting: {
+                    enabled: false
+                },
+                credits: {
+                    enabled: false
+                },
+                xAxis: [{
+                    type: 'category',
+                    lineColor: '#8d9192',
+                    crosshair: true,
+                    tickWidth: 0,
+                    labels: {
+                        autoRotation: [0],
+                        style: {
+                            fontSize: '1rem',
+                            color: '#333'
+                        }
+                    },
+                }],
+
+                yAxis: [
+                    { // Primary yAxis
+                        labels: {
+                            format: '{value}',
+                            style: {
+                                color: '#8d9393',
+                                fontSize: '1rem'
+                            },
+
+                        },
+                        title: {
+                            text: '（亿元）',
+                            style: {
+                                color: '#8d9393',
+                                fontSize: '1rem'
+                            },
+                            rotation: 0,
+                            align: 'high',
+                            x: 35,
+                            y: -15
+
+                        }
+                    }, { // Secondary yAxis
+                        visible: false,
+                        title: {
+                            text: '',
+                            style: {
+                                color: '#656668'
+                            },
+                            rotation: 0,
+                            align: 'high',
+                            x: -35,
+                            y: -15
+                        },
+                        labels: {
+                            format: '{value}',
+                            style: {
+                                color: '#656668'
+                            }
+                        },
+                        //  max:100,
+                        opposite: true,
+                        gridLineDashStyle: 'Dash',
+                        gridLineColor: '#c6cccc',
+                    }],
+                tooltip: {
+                    shared: true,
+                    valueDecimals: 2,
+                    headerFormat: '<span style="font-size: 1rem">{point.key}</span><br/>'
+                },
+                legend: {
+                    align: 'right',
+                    verticalAlign: 'top',
+                    itemStyle: {
+                        fontSize: '1rem'
+                    },
+                    x: 0,
+                    y: -30
+                },
+                plotOptions: {
+                    column: {
+                        borderWidth: 0
+                    },
+                    spline: {
+                        marker: {
+                            symbol: 'circle',
+                            lineWidth: '2',
+                            radius: 5,
+                            lineColor: '#4f9cee',
+                            fillColor: '#ffffff',
+                            states: {
+                                hover: {
+                                    radiusPlus: 2,
+                                    lineWidthPlus: 2,
+                                    lineWidth: '3',
+                                }
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: '规模',
+                    type: 'column',
+                    data: handleYeardata(datayear).number
+                }, {
+                    type: 'spline',
+                    yAxis: 1,
+                    name: '同比',
+                    data: handleYeardata(datayear).percent
+                }],
+                drilldown: {
+                    allowPointDrilldown: false, // 将此参数注释再下钻来对比查看效果
+                    series: handleMonthdata(monthdata)
+                }
+            });
+        }
+        /*堆叠柱状图和线图的下钻*/
+        function columnLineChart(wrap, data) {
+            if (document.body.clientWidth < 500) {
+                var unitx = 55;
+                var x = 0;
+                var y = -30;
+                var margin = [30, 15, 35, 70];
+
+            } else {
+                var x = 0;
+                var y = -30;
+                var unitx = 35;
+                var margin = [30, 15, 35, 150]
+            }
+
+            var chart = Highcharts.chart(wrap, {
+                chart: {
+                    zoomType: 'xy',
+                    backgroundColor: 'none',
+                    margin: margin,
+                    events: {
+                        drilldown: function (e) {
+                            if (!e.seriesOptions) {
+                                var chart = this;
+                                var drilldowns = [];
+                                var drilldownsp = [];
+                                var monthdata = data.monthdata;
+                                for (var i = 0; i < monthdata.number.length; i++) {
+                                    drilldowns[i] = {};
+                                    for (var j = 0; j < monthdata.number[i].length; j++) {
+                                        drilldowns[i][monthdata.number[i][j].id] = {
+                                            name: monthdata.number[i][j].data.name,
+                                            color: color[i],
+                                            type: 'column',
+                                            data: monthdata.number[i][j].data.data
+                                        };
+                                    }
+                                }
+                                for (var i = 0; i < monthdata.percent.length; i++) {
+                                    drilldownsp[i] = {};
+                                    for (var j = 0; j < monthdata.percent[i].length; j++) {
+                                        drilldownsp[i][monthdata.percent[i][j].id] = {
+                                            name: monthdata.percent[i][j].data.name,
+                                            color: color[i],
+                                            type: 'spline',
+                                            yAxis: 1,
+                                            data: monthdata.percent[i][j].data.data
+                                        };
+                                    }
+                                }
+                                for (var i = 0; i < drilldowns.length; i++) {
+                                    chart.addSingleSeriesAsDrilldown(e.point, drilldowns[i][e.point.name]);
+                                }
+                                for (var i = 0; i < drilldownsp.length; i++) {
+                                    chart.addSingleSeriesAsDrilldown(e.point, drilldownsp[i][e.point.name]);
+                                }
+                                chart.applyDrilldown();
+
+                            }
+                        }
+                    }
+                },
+                title: {
+                    text: ''
+                },
+                lang: {
+                    drillUpText: '\u25c1 返回年度',
+                },
+                colors: color,
+                subtitle: {
+                    text: ''
+                },
+                exporting: {
+                    enabled: false
+                },
+                credits: {
+                    enabled: false
+                },
+                xAxis: [{
+                    type: 'category',
+                    lineColor: '#8d9192',
+                    tickWidth: 0,
+                    crosshair: true,
+                    labels: {
+                        autoRotation: [0],
+                        style: {
+                            fontSize: '1rem',
+                            color: '#7b8181'
+                        }
+                    }
+                }],
+                yAxis: [
+                    { // Primary yAxis
+
+                        labels: {
+                            format: '{value}',
+                            style: {
+                                color: '#8d9393',
+                                fontSize: '1rem'
+                            },
+
+                        },
+                        title: {
+                            text: '( ' + data.unit + ' )',
+                            style: {
+                                color: '#8d9393',
+                                fontSize: '1rem'
+                            },
+                            rotation: 0,
+                            align: 'high',
+                            x: unitx,
+                            y: -15
+
+                        }
+                    }, { // Secondary yAxis
+                        visible: false,
+                        title: {
+                            text: '',
+                            style: {
+                                color: '#8d9393',
+                                fontSize: '1rem'
+                            },
+                            rotation: 0,
+                            align: 'high',
+                            x: -35,
+                            y: -15
+                        },
+                        labels: {
+                            format: '{value}',
+                            style: {
+                                color: '#8d9393',
+                                fontSize: '1rem'
+                            }
+                        },
+                        opposite: true,
+                        gridLineDashStyle: 'Solid',
+                        gridLineColor: '#c6cccc',
+                    }],
+                tooltip: {
+                    shared: true,
+                    valueDecimals: 2,
+                    style: {
+                        fontSize: '1rem',
+                        color: "#000",
+                    },
+                    headerFormat: '<span style="font-size: 1rem">{point.key}</span><br/>'
+                },
+                legend: {
+                    enabled: true,
+                    align: 'right',
+                    verticalAlign: 'top',
+                    itemStyle: {
+                        fontSize: '1rem'
+                    },
+                    x: x,
+                    y: y
+                },
+                plotOptions: {
+                    column: {
+                        stacking: 'normal',
+                        borderWidth: 0
+                    },
+                    events: {
+                        legendItemClick: function () {
+                            return false;
+                        }
+                    },
+                    spline: {
+                        marker: {
+                            symbol: 'circle',
+                            lineWidth: '2',
+                            radius: 5,
+                            lineColor: null,
+                            fillColor: '#ffffff',
+                            states: {
+                                hover: {
+                                    radiusPlus: 2,
+                                    lineWidthPlus: 2,
+                                    lineWidth: '3',
+                                }
+                            }
+                        }
+                    }
+                },
+                series: processData(data),
+                drilldown: {
+                    series: []
+                }
+            });
+        }
+        function processData(data) {
+            var data1 = data.yeardata.number.map(function (item) {
+                return { name: item.name, type: 'column', data: item.data };
+            });
+            var data2 = data.yeardata.percent.map(function (item) {
+                return { name: item.name, type: 'spline', data: item.data, yAxis: 1 };
+            });
+            return data1.concat(data2);
+        }
+
+
+        yeraChart('chart1', datayear, monthdata);
+        columnLineChart('chart2',data_dui);
+    </script>
+
+</body>
+
+</html>
